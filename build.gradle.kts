@@ -57,7 +57,10 @@ kotlin {
             }
         }
         val jvmMain by getting {
-            dependsOn(commonMain)
+            dependencies{
+                dependsOn(commonMain)
+                implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
+            }
         }
 
         val jsMain by getting {
