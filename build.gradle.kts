@@ -51,15 +51,16 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             }
         }
-        val commonTest by getting {
-            dependencies {
-                // Add common test dependencies if needed
-            }
-        }
+
         val jvmMain by getting {
             dependencies{
                 dependsOn(commonMain)
                 implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test")
             }
         }
 

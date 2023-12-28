@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/src/commonMain" />
             <option value="$PROJECT_DIR$/src/jsMain" />
             <option value="$PROJECT_DIR$/src/jvmMain" />
+            <option value="$PROJECT_DIR$/src/jvmTest" />
             <option value="$PROJECT_DIR$/src/nativeMain" />
           </set>
         </option>

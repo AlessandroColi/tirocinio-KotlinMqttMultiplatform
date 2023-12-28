@@ -20,3 +20,5 @@ include("src:jsMain")
 findProject(":src:jsMain")?.name = "jsMain"
 include("src:nativeMain")
 findProject(":src:nativeMain")?.name = "nativeMain"
+include("src:jvmTest")
+findProject(":src:jvmTest")?.name = "jvmTest"
