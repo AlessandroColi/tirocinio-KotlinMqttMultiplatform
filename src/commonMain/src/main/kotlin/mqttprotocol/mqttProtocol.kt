@@ -1,10 +1,11 @@
-package mqttprotocol
+package mqttprotocol.protocol;
+
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 /**
- * Represents the MQTT protocol used in PulvReAKt.
+ * Represents the MQTT protocol.
  */
 expect class MqttProtocol(
     host: String = "localhost",
