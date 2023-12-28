@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mqttMultiplatform-jvm">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="mqttMultiplatform-jvm.jar">
+      <element id="module-output" name="mqttMultiplatform.jvmMain" />
+    </root>
+  </artifact>
+</component>

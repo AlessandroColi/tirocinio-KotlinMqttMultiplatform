@@ -47,7 +47,8 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-                // TODO api(rootProject.libs.bundles.arrow)
+                implementation("io.arrow-kt:arrow-core:1.2.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             }
         }
         val commonTest by getting {
@@ -56,26 +57,21 @@ kotlin {
             }
         }
         val jvmMain by getting {
-            dependencies {
-                // Add JVM-specific main dependencies if needed
-            }
+            dependsOn(commonMain)
         }
-        val jvmTest by getting {
-            dependencies {
-                // Add JVM-specific test dependencies if needed
-            }
+
+        val jsMain by getting {
+            dependsOn(commonMain)
         }
+
         val nativeMain by creating {
             dependsOn(commonMain)
         }
-        val nativeTest by creating {
-            dependsOn(commonTest)
-        }
+
     }
 
     val nativeSetup: KotlinNativeTarget.() -> Unit = {
         compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
-        compilations["test"].defaultSourceSet.dependsOn(sourceSets["nativeTest"])
         binaries {
             sharedLib()
             staticLib()
