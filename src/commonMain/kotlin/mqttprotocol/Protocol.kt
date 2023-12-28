@@ -1,4 +1,4 @@
-package mqttprotocol.protocol;
+package mqttprotocol;
 
 import arrow.core.Either
 import kotlinx.coroutines.flow.Flow

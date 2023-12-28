@@ -34,6 +34,7 @@ kotlin {
                 exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
         }
+
     }
 
     js(IR) {
@@ -60,7 +61,10 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-test")
+                implementation("io.kotest:kotest-core:4.1.3")
+                implementation("io.kotest:kotest-assertions-core:5.8.0")
+                implementation("io.kotest:kotest-runner-junit5:5.8.0")
+                implementation("io.kotest:kotest-assertions-json:5.8.0")
             }
         }
 

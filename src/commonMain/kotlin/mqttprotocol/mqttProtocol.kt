@@ -1,8 +1,9 @@
-package mqttprotocol.protocol;
+package mqttprotocol;
 
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import mqttprotocol.Protocol
 
 /**
  * Represents the MQTT protocol.

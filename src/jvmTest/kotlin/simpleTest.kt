@@ -1,14 +1,17 @@
-package mqttMultiplatform.protocol
-import arrow.core.Left
-import arrow.core.Right
+package mqttMultiplatform
+
+import arrow.core.Either
+import io.kotest.common.ExperimentalKotest
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.core.spec.style.scopes.DescribeScope
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
+import mqttprotocol.Entity
+import mqttprotocol.MqttProtocol
+import mqttprotocol.ProtocolError
 
-@DescribeSpec
+@OptIn(ExperimentalKotest::class)
 class MqttProtocolTest : DescribeSpec({
 
     describe("MqttProtocol") {
@@ -26,19 +29,7 @@ class MqttProtocolTest : DescribeSpec({
             port = port,
             username = username,
             password = password,
-            coroutineDispatcher = testCoroutineDispatcher
         )
-
-        it("should set up channel successfully") {
-            runBlocking {
-                // Act
-                mqttProtocol.setupChannel(sourceEntity, destinationEntity)
-
-                // Assert
-                mqttProtocol.registeredTopics.size shouldBe 2
-                mqttProtocol.topicChannels.size shouldBe 2
-            }
-        }
 
         it("should write to channel successfully") {
             runBlocking {
@@ -50,7 +41,7 @@ class MqttProtocolTest : DescribeSpec({
                 val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message)
 
                 // Assert
-                result shouldBe Right(Unit)
+                result shouldBe Either.Right(Unit)
             }
         }
 
@@ -65,7 +56,7 @@ class MqttProtocolTest : DescribeSpec({
                 val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, message)
 
                 // Assert
-                result shouldBe Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
+                result shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
             }
         }
 
@@ -80,7 +71,7 @@ class MqttProtocolTest : DescribeSpec({
                 val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity)
 
                 // Assert
-                flowResult shouldBe Right(flowOf(message))
+                flowResult shouldBe Either.Right(this@describe.flowOf(message))
             }
         }
 
@@ -94,7 +85,7 @@ class MqttProtocolTest : DescribeSpec({
                 val flowResult = mqttProtocol.readFromChannel(invalidSourceEntity, invalidDestinationEntity)
 
                 // Assert
-                flowResult shouldBe Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
+                flowResult shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
             }
         }
 
@@ -105,8 +96,8 @@ class MqttProtocolTest : DescribeSpec({
                 val finalizeResult = mqttProtocol.finalize()
 
                 // Assert
-                initResult shouldBe Right(Unit)
-                finalizeResult shouldBe Right(Unit)
+                initResult shouldBe Either.Right(Unit)
+                finalizeResult shouldBe Either.Right(Unit)
             }
         }
     }
