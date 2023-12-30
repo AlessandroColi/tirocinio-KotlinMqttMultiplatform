@@ -2,9 +2,9 @@ import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    id("io.kotest.multiplatform") version "5.0.2"
-    kotlin("multiplatform") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
+    id("io.kotest.multiplatform") version "5.8.0"
+    kotlin("multiplatform") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 group = "mqttMultiplatform"
@@ -62,9 +62,8 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-core:4.1.3")
                 implementation("io.kotest:kotest-assertions-core:5.8.0")
-                implementation("io.kotest:kotest-runner-junit5:5.8.0")
+                implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
             }
         }
 
