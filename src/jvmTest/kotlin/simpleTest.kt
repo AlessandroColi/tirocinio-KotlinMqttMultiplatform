@@ -1,110 +1,87 @@
 package mqttMultiplatform
 
 import arrow.core.Either
-import io.kotest.common.ExperimentalKotest
-import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.core.spec.style.scopes.DescribeScope
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.flowOf
 import mqttprotocol.Entity
 import mqttprotocol.MqttProtocol
 import mqttprotocol.ProtocolError
 
-@OptIn(ExperimentalKotest::class)
-class MqttProtocolTest : DescribeSpec({
+class CommunicatorTest : StringSpec({
 
-    describe("MqttProtocol") {
+    val host = "localhost"
+    val port = 1883
+    val username = "user"
+    val password = "password"
 
-        val host = "localhost"
-        val port = 1883
-        val username = "user"
-        val password = "password"
+    val sourceEntity = Entity("source")
+    val destinationEntity = Entity("destination")
 
-        val sourceEntity = Entity("source")
-        val destinationEntity = Entity("destination")
+    val mqttProtocol = MqttProtocol(
+        host = host,
+        port = port,
+        username = username,
+        password = password,
+    )
 
-        val mqttProtocol = MqttProtocol(
-            host = host,
-            port = port,
-            username = username,
-            password = password,
-        )
+    "should write to channel successfully" {
+        // Arrange
+        mqttProtocol.setupChannel(sourceEntity, destinationEntity)
+        val message = "Test message".toByteArray()
 
-        it("should write to channel successfully") {
-            runBlocking {
-                // Arrange
-                mqttProtocol.setupChannel(sourceEntity, destinationEntity)
-                val message = "Test message".toByteArray()
+        // Act
+        val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message)
 
-                // Act
-                val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message)
+        // Assert
+        result shouldBe Either.Right(Unit)
+    }
 
-                // Assert
-                result shouldBe Either.Right(Unit)
-            }
-        }
+    "should fail to write to channel when entities are not registered" {
+        // Arrange
+        val invalidSourceEntity = Entity("invalidSource")
+        val invalidDestinationEntity = Entity("invalidDestination")
+        val message = "Test message".toByteArray()
 
-        it("should fail to write to channel when entities are not registered") {
-            runBlocking {
-                // Arrange
-                val invalidSourceEntity = Entity("invalidSource")
-                val invalidDestinationEntity = Entity("invalidDestination")
-                val message = "Test message".toByteArray()
+        // Act
+        val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, message)
 
-                // Act
-                val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, message)
+        // Assert
+        result shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
+    }
 
-                // Assert
-                result shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
-            }
-        }
+    "should read from channel successfully" {
+        // Arrange
+        mqttProtocol.setupChannel(sourceEntity, destinationEntity)
+        val message = "Test message".toByteArray()
+        mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message)
 
-        it("should read from channel successfully") {
-            runBlocking {
-                // Arrange
-                mqttProtocol.setupChannel(sourceEntity, destinationEntity)
-                val message = "Test message".toByteArray()
-                mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message)
+        // Act
+        val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity)
 
-                // Act
-                val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity)
+        // Assert
+        flowResult shouldBe Either.Right(flowOf(message))
+    }
 
-                // Assert
-                flowResult shouldBe Either.Right(this@describe.flowOf(message))
-            }
-        }
+    "should fail to read from channel when entities are not registered" {
+        // Arrange
+        val invalidSourceEntity = Entity("invalidSource")
+        val invalidDestinationEntity = Entity("invalidDestination")
 
-        it("should fail to read from channel when entities are not registered") {
-            runBlocking {
-                // Arrange
-                val invalidSourceEntity = Entity("invalidSource")
-                val invalidDestinationEntity = Entity("invalidDestination")
+        // Act
+        val flowResult = mqttProtocol.readFromChannel(invalidSourceEntity, invalidDestinationEntity)
 
-                // Act
-                val flowResult = mqttProtocol.readFromChannel(invalidSourceEntity, invalidDestinationEntity)
+        // Assert
+        flowResult shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
+    }
 
-                // Assert
-                flowResult shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
-            }
-        }
+    "should initialize and finalize successfully" {
+        // Act
+        val initResult = mqttProtocol.initialize()
+        val finalizeResult = mqttProtocol.finalize()
 
-        it("should initialize and finalize successfully") {
-            runBlocking {
-                // Act
-                val initResult = mqttProtocol.initialize()
-                val finalizeResult = mqttProtocol.finalize()
-
-                // Assert
-                initResult shouldBe Either.Right(Unit)
-                finalizeResult shouldBe Either.Right(Unit)
-            }
-        }
+        // Assert
+        initResult shouldBe Either.Right(Unit)
+        finalizeResult shouldBe Either.Right(Unit)
     }
 })
-
-private fun DescribeScope.flowOf(vararg elements: ByteArray): Flow<ByteArray> {
-    return kotlinx.coroutines.flow.flow {
-        elements.forEach { emit(it) }
-    }
-}
