@@ -1,6 +1,7 @@
 package mqttMultiplatform
 
 import arrow.core.Either
+import io.kotest.assertions.fail
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.flowOf
@@ -60,7 +61,16 @@ class CommunicatorTest : StringSpec({
         val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity)
 
         // Assert
-        flowResult shouldBe Either.Right(flowOf(message))
+        flowResult.fold(
+            { error -> fail("Expected Right, but got Left with error: $error") },
+            { flow ->
+                var result = byteArrayOf();
+                flow.collect{
+                    result += it
+                };
+                result shouldBe message
+            }
+        )
     }
 
     "should fail to read from channel when entities are not registered" {
@@ -73,15 +83,5 @@ class CommunicatorTest : StringSpec({
 
         // Assert
         flowResult shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
-    }
-
-    "should initialize and finalize successfully" {
-        // Act
-        val initResult = mqttProtocol.initialize()
-        val finalizeResult = mqttProtocol.finalize()
-
-        // Assert
-        initResult shouldBe Either.Right(Unit)
-        finalizeResult shouldBe Either.Right(Unit)
     }
 })

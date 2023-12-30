@@ -61,7 +61,15 @@ kotlin {
             }
         }
         val jvmTest by getting {
+            repositories {
+                maven {
+                    url = uri("https://repo.eclipse.org/content/repositories/paho-releases/")
+                    name = "Eclipse Paho Repo"
+                }
+            }
+
             dependencies {
+                implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
                 implementation("io.kotest:kotest-assertions-core:5.8.0")
                 implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
             }
