@@ -5,7 +5,6 @@ import arrow.core.raise.either
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -52,7 +51,7 @@ class CommunicatorTest : StringSpec({
     }
 
     "should work correctly" {
-        val message ="protocol Test"
+        val message = "protocol Test"
         var read = "initialized"
         mqttProtocol.setupChannel(sourceEntity, destinationEntity)
 
@@ -70,7 +69,7 @@ class CommunicatorTest : StringSpec({
         val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message.toByteArray())
         result shouldBe Either.Right(Unit)
 
-        reciveJob.join();
+        reciveJob.join()
         read shouldBe message
     }
 

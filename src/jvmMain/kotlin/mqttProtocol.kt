@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensureNotNull
 import arrow.core.right
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -35,6 +36,7 @@ actual class MqttProtocol actual constructor(
     private val coroutineDispatcher: CoroutineDispatcher,
 ) : Protocol {
 
+    private val logger = KotlinLogging.logger("MqttProtocol")
     private val scope = CoroutineScope(coroutineDispatcher + Job())
 
     private val registeredTopics = mutableMapOf<Pair<Entity, Entity>, String>()
@@ -48,6 +50,7 @@ actual class MqttProtocol actual constructor(
     }
 
     override suspend fun setupChannel(source: Entity, destination: Entity) {
+        logger.debug { "Setting up channel for entity $source" }
         registeredTopics += (source to destination) to toTopics(source, destination)
         registeredTopics += (destination to source) to toTopics(destination, source)
         topicChannels += toTopics(source, destination) to MutableSharedFlow(1)
@@ -57,6 +60,8 @@ actual class MqttProtocol actual constructor(
     override suspend fun writeToChannel(from: Entity, to: Entity, message: ByteArray): Either<ProtocolError, Unit> = coroutineScope {
         either {
             val topic = registeredTopics[Pair(from, to)]
+            logger.debug { "Writing message $message to topic $topic" }
+
             ensureNotNull(topic) { ProtocolError.EntityNotRegistered(to) }
             val mqttMessage = MqttMessage(message).apply { qos = 2 }
             async(coroutineDispatcher) {
@@ -69,6 +74,7 @@ actual class MqttProtocol actual constructor(
     override fun readFromChannel(from: Entity, to: Entity): Either<ProtocolError, Flow<ByteArray>> = either {
         val candidateTopic = ensureNotNull(registeredTopics[Pair(from, to)]) { ProtocolError.EntityNotRegistered(from) }
         val channel = ensureNotNull(topicChannels[candidateTopic]) { ProtocolError.EntityNotRegistered(from) }
+        logger.debug { "Reading from topic $candidateTopic" }
         channel.asSharedFlow()
     }
 
@@ -89,9 +95,11 @@ actual class MqttProtocol actual constructor(
                 val callback = object : MqttCallback {
                     override fun disconnected(disconnectResponse: MqttDisconnectResponse?) = Unit
                     override fun mqttErrorOccurred(exception: MqttException?) {
+                        logger.error(exception) { "Mqtt error" }
                     }
 
                     override fun messageArrived(topic: String?, message: MqttMessage?) {
+                        logger.debug { "New message arrived on topic $topic" }
                         val payload = message?.payload
                         requireNotNull(payload) { "Message cannot be null" }
                         topicChannels[topic]?.tryEmit(payload)
@@ -103,6 +111,7 @@ actual class MqttProtocol actual constructor(
                 }
                 mqttClient.setCallback(callback)
                 async { mqttClient.subscribe(arrayOf("MqttProtocol Test/+/+/+"), intArrayOf(1)).waitForCompletion() }.await()
+                logger.debug { "Callback setupped" }
             }
         }
     }

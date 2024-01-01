@@ -12,6 +12,10 @@ group = "mqttMultiplatform"
 repositories {
     google()
     mavenCentral()
+    maven {
+        url = uri("https://repo.eclipse.org/content/repositories/paho-releases/")
+        url = uri("https://github.com/oshai/kotlin-logging")
+    }
 }
 
 val os = OperatingSystem.current()
@@ -51,6 +55,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("io.arrow-kt:arrow-core:1.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation("org.slf4j:slf4j-api:1.7.5")
+                implementation("io.github.oshai:kotlin-logging:5.1.1")
             }
         }
 
@@ -61,12 +67,6 @@ kotlin {
             }
         }
         val jvmTest by getting {
-            repositories {
-                maven {
-                    url = uri("https://repo.eclipse.org/content/repositories/paho-releases/")
-                    name = "Eclipse Paho Repo"
-                }
-            }
 
             dependencies {
                 implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
