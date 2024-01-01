@@ -55,8 +55,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("io.arrow-kt:arrow-core:1.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                implementation("org.slf4j:slf4j-api:1.7.5")
-                implementation("io.github.oshai:kotlin-logging:5.1.1")
+                api("org.slf4j:slf4j-simple:2.0.9")
+                api("io.github.oshai:kotlin-logging:5.1.1")
             }
         }
 
