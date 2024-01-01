@@ -102,12 +102,13 @@ actual class MqttProtocol actual constructor(
                     override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) = Unit
                 }
                 mqttClient.setCallback(callback)
-                async { mqttClient.subscribe(arrayOf("pulvreakt/+/+/+"), intArrayOf(1)).waitForCompletion() }.await()
+                async { mqttClient.subscribe(arrayOf("MqttProtocol Test/+/+/+"), intArrayOf(1)).waitForCompletion() }.await()
             }
         }
     }
 
     suspend fun finalize(): Either<ProtocolError, Unit> {
+        mqttClient.disconnect();
         mqttClient.close()
         scope.coroutineContext.cancelChildren()
         return Unit.right()
@@ -119,9 +120,9 @@ actual class MqttProtocol actual constructor(
      */
     private fun toTopics(source: Entity, destination: Entity): String {
         return if (source.id != null && destination.id != null) {
-            "pulvreakt/${source.entityName}/${destination.entityName}/${destination.id}"
+            "MqttProtocol Test/${source.entityName}/${destination.entityName}/${destination.id}"
         } else {
-            "pulvreakt/${source.entityName}/${destination.entityName}"
+            "MqttProtocol Test/${source.entityName}/${destination.entityName}"
         }
     }
 }
