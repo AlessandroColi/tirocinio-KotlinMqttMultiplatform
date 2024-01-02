@@ -57,6 +57,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 api("org.slf4j:slf4j-simple:2.0.9")
                 api("io.github.oshai:kotlin-logging:5.1.1")
+                implementation("io.github.davidepianca98:kmqtt-common:0.4.3")
+                implementation("io.github.davidepianca98:kmqtt-client:0.4.3")
             }
         }
 
