@@ -73,7 +73,7 @@ class MqttProtocol(
                     port,
                     tls = null,
                     userName = username,
-                    password = password?.hexToUByteArray(),
+                    password = password?.encodeToByteArray()?.toUByteArray(),
                 ){
                     logger.debug { "New message arrived on topic $it.topicName" }
                     requireNotNull(it.payload) { "Message cannot be null" }
