@@ -14,5 +14,5 @@ plugins {
 rootProject.name = "mqttMultiplatform"
 include("src:commonMain")
 findProject(":src:commonMain")?.name = "commonMain"
-include("src:jvmTest")
-findProject(":src:jvmTest")?.name = "jvmTest"
+include("src:commonTest")
+findProject(":src:commonTest")?.name = "commonTest"

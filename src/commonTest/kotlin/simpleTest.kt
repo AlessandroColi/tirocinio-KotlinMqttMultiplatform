@@ -43,7 +43,7 @@ class CommunicatorTest : StringSpec({
     "should fail to write to channel when entities are not registered" {
         val invalidSourceEntity = Entity("invalidSource")
         val invalidDestinationEntity = Entity("invalidDestination")
-        val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, "error Test".toByteArray())
+        val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, "error Test".encodeToByteArray())
         result shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
     }
 
@@ -68,7 +68,7 @@ class CommunicatorTest : StringSpec({
             resultCollect shouldBe Either.Right(Unit)
         }
         
-        val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message.toByteArray())
+        val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message.encodeToByteArray())
         result shouldBe Either.Right(Unit)
 
         reciveJob.join()

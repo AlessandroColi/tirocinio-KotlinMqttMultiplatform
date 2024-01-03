@@ -61,11 +61,17 @@ kotlin {
                 implementation("io.github.davidepianca98:kmqtt-client:0.4.3")
             }
         }
-        val jvmTest by getting {
+        val commonTest by getting {
 
             dependencies {
-                implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation("io.kotest:kotest-assertions-core:5.8.0")
+                implementation("io.kotest:kotest-framework-datatest:5.8.0" )
+                api( "io.kotest:kotest-framework-engine:5.8.0" )
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
                 implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
             }
         }
