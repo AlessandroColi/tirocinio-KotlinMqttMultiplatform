@@ -87,9 +87,9 @@ class CommunicatorTest : StringSpec({
         read shouldBe message
     }
 
-//    TODO
-//    "should finalize successfully" {
-//        val finalizeResult = mqttProtocol.finalize()
-//        finalizeResult shouldBe Either.Right(Unit)
-//    }
+
+    "should finalize successfully" {
+        val finalizeResult = mqttProtocol.finalize()
+        finalizeResult shouldBe Either.Right(Unit)
+    }
 })
