@@ -15,6 +15,7 @@ import mqtt.packets.Qos
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.asSharedFlow
 import mqtt.Subscription
+import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.ReasonCode
 import mqtt.packets.mqttv5.SubscriptionOptions
 
@@ -53,8 +54,16 @@ class MqttProtocol(
             ensureNotNull(topic) { ProtocolError.EntityNotRegistered(to) }
 
             async(coroutineDispatcher) {
-                Either.catch { client.publish(false, Qos.AT_MOST_ONCE, topic, message.toUByteArray() ) }
-                    .mapLeft { ProtocolError.ProtocolException(it) }
+                Either.catch { client.publish(
+                    false,
+                    Qos.AT_MOST_ONCE,
+                    topic,
+                    message.toUByteArray(),
+                    MQTT5Properties(
+                        serverKeepAlive = 1u,
+                        retainAvailable = 1u,
+                    )
+                ) }.mapLeft { ProtocolError.ProtocolException(it) }
             }.await().bind()
         }
     }
@@ -83,12 +92,12 @@ class MqttProtocol(
                 }
             }.mapLeft { ProtocolError.ProtocolException(it) }.bind()
             listenerJob = scope.launch {
-                //TODO
                 async { client.subscribe(listOf(
-                    Subscription("MqttProtocol Test/+/+/+",
+                    Subscription("MqttProtocol_Test/#",
                         SubscriptionOptions(qos = Qos.EXACTLY_ONCE))),
                 ) }.await()
                 logger.debug { "client setup" }
+                client.run()
             }
         }
     }
@@ -107,9 +116,9 @@ class MqttProtocol(
      */
     private fun toTopics(source: Entity, destination: Entity): String {
         return if (source.id != null && destination.id != null) {
-            "MqttProtocol Test/${source.entityName}/${destination.entityName}/${destination.id}"
+            "MqttProtocol_Test/${source.entityName}/${destination.entityName}/${destination.id}"
         } else {
-            "MqttProtocol Test/${source.entityName}/${destination.entityName}"
+            "MqttProtocol_Test/${source.entityName}/${destination.entityName}"
         }
     }
 

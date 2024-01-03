@@ -2,8 +2,6 @@ package mqttMultiplatform
 
 import arrow.core.Either
 import arrow.core.raise.either
-import io.kotest.assertions.nondeterministic.eventually
-import io.kotest.assertions.nondeterministic.eventuallyConfig
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -14,12 +12,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import mqttprotocol.Entity
 import mqttprotocol.MqttProtocol
 import mqttprotocol.ProtocolError
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 object ProjectConfig : AbstractProjectConfig() {
     override val timeout = 10.seconds
 }
@@ -66,20 +59,15 @@ class CommunicatorTest : StringSpec({
         var read = "initialized"
         mqttProtocol.setupChannel(sourceEntity, destinationEntity)
         val reciveJob = launch(UnconfinedTestDispatcher()) {
-            println("started")
             val resultCollect = either {
                 val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity).bind()
-                println("reading")
                 flowResult.take(1).collect {
                     read = it.decodeToString()
-                    println("read")
                 }
             }
             resultCollect shouldBe Either.Right(Unit)
-            println("left")
         }
-//            delay(1000)
-        println("write")
+        
         val result = mqttProtocol.writeToChannel(sourceEntity, destinationEntity, message.toByteArray())
         result shouldBe Either.Right(Unit)
 
