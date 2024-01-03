@@ -70,10 +70,26 @@ kotlin {
                 api( "io.kotest:kotest-framework-engine:5.8.0" )
             }
         }
+        val jvmMain by getting {
+            dependsOn(commonMain)
+        }
         val jvmTest by getting {
             dependencies {
+                dependsOn(commonTest)
                 implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
             }
+        }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeTest by creating {
+            dependsOn(commonTest)
+        }
+        val jsMain by getting {
+            dependsOn(commonMain)
+        }
+        val jsTest by getting {
+            dependsOn(commonTest)
         }
     }
 
