@@ -61,13 +61,6 @@ kotlin {
                 implementation("io.github.davidepianca98:kmqtt-client:0.4.3")
             }
         }
-
-        val jvmMain by getting {
-            dependencies{
-                dependsOn(commonMain)
-                implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
-            }
-        }
         val jvmTest by getting {
 
             dependencies {
@@ -76,15 +69,6 @@ kotlin {
                 implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
             }
         }
-
-        val jsMain by getting {
-            dependsOn(commonMain)
-        }
-
-        val nativeMain by creating {
-            dependsOn(commonMain)
-        }
-
     }
 
     val nativeSetup: KotlinNativeTarget.() -> Unit = {
