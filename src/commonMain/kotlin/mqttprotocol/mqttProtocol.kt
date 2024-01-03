@@ -96,8 +96,8 @@ class MqttProtocol(
     fun finalize(): Either<ProtocolError, Unit>  {
         client.disconnect(ReasonCode.SUCCESS)
         scope.coroutineContext.cancelChildren()
-        logger.debug { "client finalizedde" }
-        return Unit.right();
+        logger.debug { "client finalized" }
+        return Unit.right()
     }
 
 
@@ -112,4 +112,5 @@ class MqttProtocol(
             "MqttProtocol Test/${source.entityName}/${destination.entityName}"
         }
     }
+
 }
