@@ -68,6 +68,9 @@ kotlin {
                 implementation("io.kotest:kotest-assertions-core:5.8.0")
                 implementation("io.kotest:kotest-framework-datatest:5.8.0" )
                 api( "io.kotest:kotest-framework-engine:5.8.0" )
+                implementation("org.jetbrains.kotlin:kotlin-test:1.9.21")
+                implementation("org.jetbrains.kotlin:kotlin-test-annotations-common:1.9.21")
+                implementation("org.jetbrains.kotlin:kotlin-test-common:1.9.21")
             }
         }
         val jvmMain by getting {
@@ -95,6 +98,7 @@ kotlin {
 
     val nativeSetup: KotlinNativeTarget.() -> Unit = {
         compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
+        compilations["test"].defaultSourceSet.dependsOn(kotlin.sourceSets["nativeTest"])
         binaries {
             sharedLib()
             staticLib()
@@ -121,7 +125,6 @@ kotlin {
         compilations.all {
             kotlinOptions {
                 allWarningsAsErrors = true
-                freeCompilerArgs += listOf("-Xexpect-actual-classes")
             }
         }
     }
@@ -142,4 +145,7 @@ kotlin {
         }
         binaries.configureEach { linkTask.enabled = false }
     }
+}
+rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().download = false
 }

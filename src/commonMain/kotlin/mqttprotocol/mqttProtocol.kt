@@ -60,7 +60,7 @@ class MqttProtocol(
                     topic,
                     message.toUByteArray(),
                     MQTT5Properties(
-                        serverKeepAlive = 1u,
+                        serverKeepAlive = 5000u,
                         retainAvailable = 1u,
                     )
                 ) }.mapLeft { ProtocolError.ProtocolException(it) }
@@ -85,6 +85,8 @@ class MqttProtocol(
                     tls = null,
                     userName = username,
                     password = password?.encodeToByteArray()?.toUByteArray(),
+                    keepAlive = 5000,
+                    cleanStart = false,
                 ){
                     logger.debug { "New message arrived on topic $it.topicName" }
                     requireNotNull(it.payload) { "Message cannot be null" }
