@@ -21,26 +21,18 @@ class CommunicatorTest : StringSpec({
 
     val host = "localhost"
     val port = 1883
-    val username = "user"
     val password = "password"
 
     val sourceEntity = Entity("source")
     val destinationEntity = Entity("destination")
 
-    val mqttProtocol = MqttProtocol(
-        host = host,
-        port = port,
-        username = username,
-        password = password,
-    )
-
-
-    "should initialize successfully" {
-        val initResult = mqttProtocol.initialize()
-        initResult shouldBe Either.Right(Unit)
-    }
-
     "should fail to write to channel when entities are not registered" {
+        val mqttProtocol = MqttProtocol(
+            host = host,
+            port = port,
+            username = "fail1",
+            password = password,
+        )
         val invalidSourceEntity = Entity("invalidSource")
         val invalidDestinationEntity = Entity("invalidDestination")
         val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, "error Test".encodeToByteArray())
@@ -48,6 +40,12 @@ class CommunicatorTest : StringSpec({
     }
 
     "should fail to read from channel when entities are not registered" {
+        val mqttProtocol = MqttProtocol(
+            host = host,
+            port = port,
+            username = "fail2",
+            password = password,
+        )
         val invalidSourceEntity = Entity("invalidSource")
         val invalidDestinationEntity = Entity("invalidDestination")
         val flowResult = mqttProtocol.readFromChannel(invalidSourceEntity, invalidDestinationEntity)
@@ -55,9 +53,20 @@ class CommunicatorTest : StringSpec({
     }
 
     "should work correctly" {
+        val mqttProtocol = MqttProtocol(
+            host = host,
+            port = port,
+            username = "user",
+            password = password,
+        )
+        val initResult = mqttProtocol.initialize()
+        initResult shouldBe Either.Right(Unit)
+
         val message = "protocol Test"
         var read = "initialized"
+
         mqttProtocol.setupChannel(sourceEntity, destinationEntity)
+
         val reciveJob = launch(UnconfinedTestDispatcher()) {
             val resultCollect = either {
                 val flowResult = mqttProtocol.readFromChannel(sourceEntity, destinationEntity).bind()
@@ -73,10 +82,7 @@ class CommunicatorTest : StringSpec({
 
         reciveJob.join()
         read shouldBe message
-    }
 
-
-    "should finalize successfully" {
         val finalizeResult = mqttProtocol.finalize()
         finalizeResult shouldBe Either.Right(Unit)
     }
