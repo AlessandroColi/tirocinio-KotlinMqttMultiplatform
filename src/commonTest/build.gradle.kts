@@ -1,1 +1,1 @@
-group = "mqttMultiplatform.jvmTest"
+group = "mqttMultiplatform.commonTest"

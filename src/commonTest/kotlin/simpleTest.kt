@@ -33,10 +33,14 @@ class CommunicatorTest : StringSpec({
             username = "fail1",
             password = password,
         )
+        val initResult = mqttProtocol.initialize()
+        initResult shouldBe Either.Right(Unit)
         val invalidSourceEntity = Entity("invalidSource")
         val invalidDestinationEntity = Entity("invalidDestination")
         val result = mqttProtocol.writeToChannel(invalidSourceEntity, invalidDestinationEntity, "error Test".encodeToByteArray())
         result shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidDestinationEntity))
+        val finalizeResult = mqttProtocol.finalize()
+        finalizeResult shouldBe Either.Right(Unit)
     }
 
     "should fail to read from channel when entities are not registered" {
@@ -46,10 +50,14 @@ class CommunicatorTest : StringSpec({
             username = "fail2",
             password = password,
         )
+        val initResult = mqttProtocol.initialize()
+        initResult shouldBe Either.Right(Unit)
         val invalidSourceEntity = Entity("invalidSource")
         val invalidDestinationEntity = Entity("invalidDestination")
         val flowResult = mqttProtocol.readFromChannel(invalidSourceEntity, invalidDestinationEntity)
         flowResult shouldBe Either.Left(ProtocolError.EntityNotRegistered(invalidSourceEntity))
+        val finalizeResult = mqttProtocol.finalize()
+        finalizeResult shouldBe Either.Right(Unit)
     }
 
     "should work correctly" {
