@@ -56,7 +56,7 @@ class MqttProtocol(
             async(coroutineDispatcher) {
                 Either.catch { client.publish(
                     false,
-                    Qos.AT_MOST_ONCE,
+                    Qos.EXACTLY_ONCE,
                     topic,
                     message.toUByteArray(),
                     MQTT5Properties(

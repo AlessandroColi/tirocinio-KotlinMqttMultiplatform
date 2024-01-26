@@ -42,20 +42,19 @@ kotlin {
 
     }
 
-    js(IR) {
+    /*js(IR) {
         browser()
         nodejs()
         binaries.library()
-    }
+    }*/
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-                implementation("io.arrow-kt:arrow-core:1.2.1")
+                api("io.arrow-kt:arrow-core:1.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                api("org.slf4j:slf4j-simple:2.0.9")
                 api("io.github.oshai:kotlin-logging:5.1.1")
                 implementation("io.github.davidepianca98:kmqtt-common:0.4.3")
                 implementation("io.github.davidepianca98:kmqtt-client:0.4.3")
@@ -74,7 +73,10 @@ kotlin {
             }
         }
         val jvmMain by getting {
-            dependsOn(commonMain)
+            dependencies{
+                dependsOn(commonMain)
+                api("org.slf4j:slf4j-simple:2.0.9")
+            }
         }
         val jvmTest by getting {
             dependencies {
@@ -88,12 +90,12 @@ kotlin {
         val nativeTest by creating {
             dependsOn(commonTest)
         }
-        val jsMain by getting {
+        /*val jsMain by getting {
             dependsOn(commonMain)
         }
         val jsTest by getting {
             dependsOn(commonTest)
-        }
+        }*/
     }
 
     val nativeSetup: KotlinNativeTarget.() -> Unit = {
