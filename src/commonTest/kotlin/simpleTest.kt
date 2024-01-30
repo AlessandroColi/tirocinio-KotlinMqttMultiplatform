@@ -59,6 +59,21 @@ class CommunicatorTest : StringSpec({
         val finalizeResult = mqttProtocol.finalize()
         finalizeResult shouldBe Either.Right(Unit)
     }
+    "should initialize and finalize correctly" {
+        val mqttProtocol = MqttProtocol(
+            host = host,
+            port = port,
+            username = "init",
+            password = password,
+        )
+        val initResult = mqttProtocol.initialize()
+        initResult shouldBe Either.Right(Unit)
+
+        mqttProtocol.setupChannel(sourceEntity, destinationEntity)
+
+        val finalizeResult = mqttProtocol.finalize()
+        finalizeResult shouldBe Either.Right(Unit)
+    }
 
     "should work correctly" {
         val mqttProtocol = MqttProtocol(
