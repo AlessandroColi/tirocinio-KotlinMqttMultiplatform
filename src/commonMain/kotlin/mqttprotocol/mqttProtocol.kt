@@ -22,7 +22,7 @@ import mqtt.packets.mqttv5.SubscriptionOptions
 /**
  * Represents the MQTT protocol.
  */
-@OptIn(ExperimentalUnsignedTypes::class, ExperimentalStdlibApi::class)
+@OptIn(ExperimentalUnsignedTypes::class)
 class MqttProtocol(
     private val host: String = "localhost",
     private val port: Int = 1883,
@@ -45,7 +45,6 @@ class MqttProtocol(
         topicChannels += toTopics(destination, source) to MutableSharedFlow(1)
     }
 
-    @OptIn(ExperimentalUnsignedTypes::class)
     override suspend fun writeToChannel(from: Entity, to: Entity, message: ByteArray): Either<ProtocolError, Unit> = coroutineScope {
         either {
             val topic = registeredTopics[Pair(from, to)]
@@ -55,7 +54,7 @@ class MqttProtocol(
 
             async(coroutineDispatcher) {
                 Either.catch { client.publish(
-                    false,
+                    retain = true,
                     Qos.EXACTLY_ONCE,
                     topic,
                     message.toUByteArray(),
