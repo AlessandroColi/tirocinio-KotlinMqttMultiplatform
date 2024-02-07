@@ -20,7 +20,7 @@ object ProjectConfig : AbstractProjectConfig() {
 class CommunicatorTest : StringSpec({
 
     val host = "localhost"
-    val port = 1883
+    val port = 1885
     val password = "password"
 
     val sourceEntity = Entity("source")

@@ -42,11 +42,11 @@ kotlin {
 
     }
 
-    /*js(IR) {
+    js(IR) {
         browser()
         nodejs()
         binaries.library()
-    }*/
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -90,12 +90,12 @@ kotlin {
         val nativeTest by creating {
             dependsOn(commonTest)
         }
-        /*val jsMain by getting {
+        val jsMain by getting {
             dependsOn(commonMain)
         }
         val jsTest by getting {
             dependsOn(commonTest)
-        }*/
+        }
     }
 
     val nativeSetup: KotlinNativeTarget.() -> Unit = {

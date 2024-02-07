@@ -25,7 +25,7 @@ import mqtt.packets.mqttv5.SubscriptionOptions
 @OptIn(ExperimentalUnsignedTypes::class)
 class MqttProtocol(
     private val host: String = "localhost",
-    private val port: Int = 1883,
+    private val port: Int = 1885,
     private val username: String? = null,
     private val password: String? = null,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
@@ -92,11 +92,12 @@ class MqttProtocol(
                     topicChannels[it.topicName]?.tryEmit(it.payload!!.toByteArray())
                 }
             }.mapLeft { ProtocolError.ProtocolException(it) }.bind()
+
+            client.subscribe(listOf(
+                Subscription("MqttProtocol_Test/#",
+                    SubscriptionOptions(qos = Qos.EXACTLY_ONCE))))
+
             listenerJob = scope.launch {
-                async { client.subscribe(listOf(
-                    Subscription("MqttProtocol_Test/#",
-                        SubscriptionOptions(qos = Qos.EXACTLY_ONCE))),
-                ) }.await()
                 logger.debug { "client setup" }
                 client.run()
             }
