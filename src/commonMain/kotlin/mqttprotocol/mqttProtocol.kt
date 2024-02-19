@@ -91,11 +91,18 @@ class MqttProtocol(
                     requireNotNull(it.payload) { "Message cannot be null" }
                     topicChannels[it.topicName]?.tryEmit(it.payload!!.toByteArray())
                 }
-            }.mapLeft { ProtocolError.ProtocolException(it) }.bind()
 
-            client.subscribe(listOf(
-                Subscription("MqttProtocol_Test/#",
-                    SubscriptionOptions(qos = Qos.EXACTLY_ONCE))))
+                client.subscribe(listOf(
+                    Subscription("MqttProtocol_Test/#",
+                        SubscriptionOptions(qos = Qos.EXACTLY_ONCE))))
+                client.step()
+                println("init");
+                while(!client.connackReceived){
+                    client.step()
+                    println("qua")
+                }
+
+            }.mapLeft { ProtocolError.ProtocolException(it) }.bind()
 
             listenerJob = scope.launch {
                 logger.debug { "client setup" }
@@ -105,7 +112,9 @@ class MqttProtocol(
     }
 
     fun finalize(): Either<ProtocolError, Unit>  {
-        client.disconnect(ReasonCode.SUCCESS)
+        if(client.connackReceived){
+            client.disconnect(ReasonCode.SUCCESS)
+        }
         scope.coroutineContext.cancelChildren()
         logger.debug { "client finalized" }
         return Unit.right()
