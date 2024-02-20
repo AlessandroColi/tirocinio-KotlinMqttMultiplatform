@@ -96,10 +96,8 @@ class MqttProtocol(
                     Subscription("MqttProtocol_Test/#",
                         SubscriptionOptions(qos = Qos.EXACTLY_ONCE))))
                 client.step()
-                println("init");
                 while(!client.connackReceived){
                     client.step()
-                    println("qua")
                 }
 
             }.mapLeft { ProtocolError.ProtocolException(it) }.bind()
