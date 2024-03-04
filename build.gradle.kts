@@ -60,19 +60,28 @@ kotlin {
             }
         }
 
+        val commonTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation("io.kotest:kotest-assertions-core:5.8.0")
+                implementation("io.kotest:kotest-framework-datatest:5.8.0" )
+                api( "io.kotest:kotest-framework-engine:5.8.0" )
+                implementation("org.jetbrains.kotlin:kotlin-test:1.9.21")
+                implementation("org.jetbrains.kotlin:kotlin-test-annotations-common:1.9.21")
+                implementation("org.jetbrains.kotlin:kotlin-test-common:1.9.21")
+            }
+        }
+
+
         val jvmMain by getting {
             dependencies{
                 dependsOn(commonMain)
                 implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
             }
         }
-        val jvmTest by getting {
 
-            dependencies {
-                implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
-                implementation("io.kotest:kotest-assertions-core:5.8.0")
-                implementation("io.kotest:kotest-runner-junit5-jvm:5.8.0")
-            }
+        val jvmTest by getting {
+            dependsOn(commonTest)
         }
 
         val jsMain by getting {

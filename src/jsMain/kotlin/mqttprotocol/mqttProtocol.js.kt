@@ -27,4 +27,12 @@ actual class MqttProtocol actual constructor(
     override fun readFromChannel(from: Entity, to: Entity): Either<ProtocolError, Flow<ByteArray>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun initialize(): Either<ProtocolError, Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun finalize(): Either<ProtocolError, Unit> {
+        TODO("Not yet implemented")
+    }
 }

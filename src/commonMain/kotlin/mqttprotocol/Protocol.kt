@@ -30,4 +30,6 @@ interface Protocol{
      * Reads from the channel of the given [from] entity.
      */
     fun readFromChannel(from: Entity, to: Entity): Either<ProtocolError, Flow<ByteArray>>
+    abstract suspend fun initialize(): Either<ProtocolError, Unit>
+    abstract suspend fun finalize(): Either<ProtocolError, Unit>
 }

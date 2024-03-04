@@ -78,7 +78,7 @@ actual class MqttProtocol actual constructor(
         channel.asSharedFlow()
     }
 
-    suspend fun initialize(): Either<ProtocolError, Unit> = coroutineScope {
+    override suspend fun initialize(): Either<ProtocolError, Unit> = coroutineScope {
         either {
             Either.catch {
                 mqttClient = MqttAsyncClient(
@@ -116,7 +116,7 @@ actual class MqttProtocol actual constructor(
         }
     }
 
-    suspend fun finalize(): Either<ProtocolError, Unit> {
+    override suspend fun finalize(): Either<ProtocolError, Unit> {
         mqttClient.disconnect();
         mqttClient.close()
         scope.coroutineContext.cancelChildren()

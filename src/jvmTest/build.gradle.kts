@@ -1,1 +1,0 @@
-group = "mqttMultiplatform.jvmTest"
