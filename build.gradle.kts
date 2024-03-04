@@ -56,8 +56,8 @@ kotlin {
                 api("io.arrow-kt:arrow-core:1.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 api("io.github.oshai:kotlin-logging:5.1.1")
-                implementation("io.github.davidepianca98:kmqtt-common:0.4.3")
-                implementation("io.github.davidepianca98:kmqtt-client:0.4.3")
+                implementation("io.github.davidepianca98:kmqtt-common:0.4.6")
+                implementation("io.github.davidepianca98:kmqtt-client:0.4.6")
             }
         }
         val commonTest by getting {
@@ -149,5 +149,5 @@ kotlin {
     }
 }
 rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().download = false
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().download = true
 }
