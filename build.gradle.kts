@@ -1,5 +1,10 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 
 plugins {
     id("io.kotest.multiplatform") version "5.8.0"
@@ -14,7 +19,6 @@ repositories {
     mavenCentral()
     maven {
         url = uri("https://repo.eclipse.org/content/repositories/paho-releases/")
-        url = uri("https://github.com/oshai/kotlin-logging")
     }
 }
 
@@ -33,13 +37,12 @@ kotlin {
             testLogging {
                 showExceptions = true
                 events = setOf(
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-                    org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                    TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
                 )
-                exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+                exceptionFormat = TestExceptionFormat.FULL
             }
         }
-
     }
 
     js(IR) {
@@ -90,6 +93,150 @@ kotlin {
         val nativeTest by creating {
             dependsOn(commonTest)
         }
+
+        val linuxX64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val linuxX64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val tvosSimulatorArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val tvosSimulatorArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val tvosArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val tvosArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val watchosSimulatorArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val watchosSimulatorArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val watchosArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val watchosArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val iosX64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val iosX64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val iosSimulatorArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val iosSimulatorArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val iosArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val iosArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val macosArm64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val macosArm64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val macosX64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val macosX64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
+        val mingwX64Main by creating {
+            dependencies {
+                dependsOn(nativeMain)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+        val mingwX64Test by creating {
+            dependencies {
+                dependsOn(nativeTest)
+                implementation(files("openssl/openssl-mingw-x64.klib"))
+            }
+        }
+
         val jsMain by getting {
             dependsOn(commonMain)
         }
@@ -98,9 +245,9 @@ kotlin {
         }
     }
 
-    val nativeSetup: KotlinNativeTarget.() -> Unit = {
-        compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
-        compilations["test"].defaultSourceSet.dependsOn(kotlin.sourceSets["nativeTest"])
+    val nativeSetup: KotlinNativeTarget.(targetName: String) -> Unit = { targetName ->
+        compilations["main"].defaultSourceSet.dependsOn(sourceSets[targetName+"Main"])
+        compilations["test"].defaultSourceSet.dependsOn(kotlin.sourceSets[targetName+"Test"])
         binaries {
             sharedLib()
             staticLib()
@@ -109,19 +256,50 @@ kotlin {
 
     applyDefaultHierarchyTemplate()
 
-    linuxX64(nativeSetup)
+    linuxX64 {
+        nativeSetup("linuxX64")
+    }
 
-    mingwX64(nativeSetup)
+    mingwX64 {
+        nativeSetup("mingwX64")
+    }
 
-    macosX64(nativeSetup)
-    macosArm64(nativeSetup)
-    iosArm64(nativeSetup)
-    iosSimulatorArm64(nativeSetup)
-    iosX64(nativeSetup)
-    watchosArm64(nativeSetup)
-    watchosSimulatorArm64(nativeSetup)
-    tvosArm64(nativeSetup)
-    tvosSimulatorArm64(nativeSetup)
+    macosX64 {
+        nativeSetup("macosX64")
+    }
+
+    macosArm64 {
+        nativeSetup("macosArm64")
+    }
+
+    iosArm64 {
+        nativeSetup("iosArm64")
+    }
+
+    iosSimulatorArm64 {
+        nativeSetup("iosSimulatorArm64")
+    }
+
+    iosX64 {
+        nativeSetup("iosX64")
+    }
+
+    watchosArm64 {
+        nativeSetup("watchosArm64")
+    }
+
+    watchosSimulatorArm64 {
+        nativeSetup("watchosSimulatorArm64")
+    }
+
+    tvosArm64 {
+        nativeSetup("tvosArm64")
+    }
+
+    tvosSimulatorArm64 {
+        nativeSetup("tvosSimulatorArm64")
+    }
+
 
     targets.all {
         compilations.all {
@@ -148,6 +326,7 @@ kotlin {
         binaries.configureEach { linkTask.enabled = false }
     }
 }
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().download = true
+
+rootProject.plugins.withType<NodeJsRootPlugin> {
+    rootProject.the<NodeJsRootExtension>().download = true
 }
