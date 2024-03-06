@@ -97,130 +97,130 @@ kotlin {
         val linuxX64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-linux-x64.klib"))
             }
         }
         val linuxX64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-linux-x64.klib"))
             }
         }
 
         val tvosSimulatorArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-tvos-simulator-arm64.klib"))
             }
         }
         val tvosSimulatorArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-tvos-simulator-arm64.klib"))
             }
         }
 
         val tvosArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-tvos-arm64.klib"))
             }
         }
         val tvosArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-tvos-arm64.klib"))
             }
         }
 
         val watchosSimulatorArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-watchos-simulator-arm64.klib"))
             }
         }
         val watchosSimulatorArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-watchos-simulator-arm64.klib"))
             }
         }
 
         val watchosArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-watchos-arm64.klib"))
             }
         }
         val watchosArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-watchos-arm64.klib"))
             }
         }
 
         val iosX64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-x64.klib"))
             }
         }
         val iosX64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-x64.klib"))
             }
         }
 
         val iosSimulatorArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-simulator-arm64.klib"))
             }
         }
         val iosSimulatorArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-simulator-arm64.klib"))
             }
         }
 
         val iosArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-arm64.klib"))
             }
         }
         val iosArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-ios-arm64.klib"))
             }
         }
 
         val macosArm64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-macos-arm64.klib"))
             }
         }
         val macosArm64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-macos-arm64.klib"))
             }
         }
 
         val macosX64Main by creating {
             dependencies {
                 dependsOn(nativeMain)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-macos-x64.klib"))
             }
         }
         val macosX64Test by creating {
             dependencies {
                 dependsOn(nativeTest)
-                implementation(files("openssl/openssl-mingw-x64.klib"))
+                implementation(files("openssl/openssl-macos-x64.klib"))
             }
         }
 
