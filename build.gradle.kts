@@ -1,10 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.os.OperatingSystem
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 
 plugins {
     id("io.kotest.multiplatform") version "5.8.0"
@@ -46,7 +43,7 @@ kotlin {
     }
 
     js(IR) {
-        browser()
+        browser{}
         nodejs()
         binaries.library()
     }
@@ -325,8 +322,4 @@ kotlin {
         }
         binaries.configureEach { linkTask.enabled = false }
     }
-}
-
-rootProject.plugins.withType<NodeJsRootPlugin> {
-    rootProject.the<NodeJsRootExtension>().download = true
 }
